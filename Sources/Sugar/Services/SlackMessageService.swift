@@ -3,16 +3,14 @@ import Bot
 public class SlackMessageService: SlackRTMEventService {
     public init() { }
     
-    public func event(slackBot: SlackBot, event: RTMAPIEvent, webApi: WebAPI) throws {
-        switch event {
-        case .message(let message, let previous):
+    public func configureEvents(slackBot: SlackBot, webApi: WebAPI, dispatcher: SlackRTMEventDispatcher) {
+        dispatcher.onEvent(MessageEvent.self) { data in
             try self.message(
                 slackBot: slackBot,
                 webApi: webApi,
-                message: message.makeDecorator(slackModels: slackBot.currentSlackModelData),
-                previous: previous?.makeDecorator(slackModels: slackBot.currentSlackModelData)
+                message: data.message.makeDecorator(slackModels: slackBot.currentSlackModelData),
+                previous: data.previous?.makeDecorator(slackModels: slackBot.currentSlackModelData)
             )
-        default: break
         }
     }
     

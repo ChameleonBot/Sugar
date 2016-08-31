@@ -4,8 +4,8 @@ public class SlackMessageService: SlackRTMEventService {
     public init() { }
     
     public func configureEvents(slackBot: SlackBot, webApi: WebAPI, dispatcher: SlackRTMEventDispatcher) {
-        dispatcher.onEvent(MessageEvent.self) { data in
-            try self.message(
+        dispatcher.onEvent(message.self) { data in
+            try self.messageEvent(
                 slackBot: slackBot,
                 webApi: webApi,
                 message: data.message.makeDecorator(slackModels: slackBot.currentSlackModelData),
@@ -14,7 +14,7 @@ public class SlackMessageService: SlackRTMEventService {
         }
     }
     
-    public func message(slackBot: SlackBot, webApi: WebAPI, message: MessageDecorator, previous: MessageDecorator?) throws {
+    public func messageEvent(slackBot: SlackBot, webApi: WebAPI, message: MessageDecorator, previous: MessageDecorator?) throws {
         //Override...
     }
 }

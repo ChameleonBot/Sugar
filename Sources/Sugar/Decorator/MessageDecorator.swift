@@ -21,8 +21,8 @@ public struct MessageDecorator {
                 self.message.bot
     }
     
-    /// The `Target` for this `Message`
-    public var target: Target? {
+    /// The `SlackTargetType` for this `Message`
+    public var target: SlackTargetType? {
         return self.message.channel?.value
     }
     

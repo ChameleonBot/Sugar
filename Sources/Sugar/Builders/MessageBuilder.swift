@@ -4,7 +4,7 @@ import Foundation
 /// A builder to make creating Slack messages easier
 public final class SlackMessage {
     //MARK: - Private Properties
-    private let target: Target
+    private let target: SlackTargetType
     private let options: [ChatPostMessageOption]
     private var messageSegments = [String]()
     
@@ -12,12 +12,12 @@ public final class SlackMessage {
     /**
      Create a new `SlackMessage`
      
-     - parameter target:  The `Target` the message will be sent to
+     - parameter target:  The `SlackTargetType` the message will be sent to
      - parameter options: A sequence of `ChatPostMessage.Option`s to use for the message (optional)
      
      - returns: A new `SlackMessage` instance
      */
-    public init(target: Target, options: [ChatPostMessageOption] = [.linkNames(true)]) {
+    public init(target: SlackTargetType, options: [ChatPostMessageOption] = [.linkNames(true)]) {
         self.target = target
         self.options = options
     }

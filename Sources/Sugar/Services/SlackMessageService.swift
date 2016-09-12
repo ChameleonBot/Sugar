@@ -1,6 +1,6 @@
 import Bot
 
-public class SlackMessageService: SlackRTMEventService {
+open class SlackMessageService: SlackRTMEventService {
     public init() { }
     
     public func configureEvents(slackBot: SlackBot, webApi: WebAPI, dispatcher: SlackRTMEventDispatcher) {
@@ -14,7 +14,7 @@ public class SlackMessageService: SlackRTMEventService {
         }
     }
     
-    public func messageEvent(slackBot: SlackBot, webApi: WebAPI, message: MessageDecorator, previous: MessageDecorator?) throws {
+    open func messageEvent(slackBot: SlackBot, webApi: WebAPI, message: MessageDecorator, previous: MessageDecorator?) throws {
         //Override...
     }
 }

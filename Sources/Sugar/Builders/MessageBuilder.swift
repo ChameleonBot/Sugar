@@ -4,9 +4,9 @@ import Foundation
 /// A builder to make creating Slack messages easier
 public final class SlackMessage {
     //MARK: - Private Properties
-    private let target: SlackTargetType
-    private let options: [ChatPostMessageOption]
-    private var messageSegments = [String]()
+    fileprivate let target: SlackTargetType
+    fileprivate let options: [ChatPostMessageOption]
+    fileprivate var messageSegments = [String]()
     
     //MARK: - Lifecycle
     /**
@@ -133,8 +133,8 @@ extension SlackMessage {
 }
 
 //MARK: - Private Helpers
-extension SlackMessage {
-    private func value(_ string: String, trailingSpace: Bool) -> String {
+fileprivate extension SlackMessage {
+    func value(_ string: String, trailingSpace: Bool) -> String {
         return "\(string)\(trailingSpace ? " " : "")"
     }
 }
@@ -160,7 +160,7 @@ public enum SlackMessageCommand {
     /// Custom mention
     case Custom(name: String)
     
-    private var command: String {
+    fileprivate var command: String {
         switch self {
         case .Channel: return "!channel"
         case .Group: return "!group"
@@ -193,7 +193,7 @@ public enum SlackMessageFormatting {
     /// Use strikethrough
     case Strike
     
-    private func formattedText(_ value: String) -> String {
+    fileprivate func formattedText(_ value: String) -> String {
         switch self {
         case .None: return value
         case .Pre: return "```\(value)```"

@@ -54,15 +54,15 @@ public struct MessageDecorator {
     }
     
     //MARK: - Lifecycle
-    init(message: Message, slackModels: () -> SlackModels) {
+    init(message: Message, slackModels: @escaping () -> SlackModels) {
         self.message = message
         self.slackModels = slackModels
     }
 }
 
 //MARK: - Link Extraction
-extension MessageDecorator {
-    private func mentionedLinks(prefix: String = "", filter: ((MessageLink) -> Bool) = { _ in true }) -> [MessageLink] {
+fileprivate extension MessageDecorator {
+    func mentionedLinks(prefix: String = "", filter: ((MessageLink) -> Bool) = { _ in true }) -> [MessageLink] {
         guard self.text.characters.contains("<") && self.text.characters.contains(">") else { return [] }
         
         //NOTE: so far I've just been avoid RegEx for the sake of it...
@@ -110,7 +110,7 @@ public struct MessageLink {
 
 //MARK: - Factory
 extension Message {
-    func makeDecorator(slackModels: () -> SlackModels) -> MessageDecorator {
+    func makeDecorator(slackModels: @escaping () -> SlackModels) -> MessageDecorator {
         return MessageDecorator(message: self, slackModels: slackModels)
     }
 }

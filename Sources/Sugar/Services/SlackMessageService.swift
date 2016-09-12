@@ -3,7 +3,7 @@ import Bot
 open class SlackMessageService: SlackRTMEventService {
     public init() { }
     
-    open  func configureEvents(slackBot: SlackBot, webApi: WebAPI, dispatcher: SlackRTMEventDispatcher) {
+    open func configureEvents(slackBot: SlackBot, webApi: WebAPI, dispatcher: SlackRTMEventDispatcher) {
         dispatcher.onEvent(message.self) { data in
             try self.messageEvent(
                 slackBot: slackBot,

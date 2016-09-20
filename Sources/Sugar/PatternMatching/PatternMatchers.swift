@@ -14,10 +14,10 @@ public struct PartialPatternMatch {
 
 /// The complete set of results obtained from a successful pattern match
 public struct PatternMatchResult {
-    public let partials: [PartialPatternMatch]
+    public let segments: [PartialPatternMatch]
     
-    init(partials: [PartialPatternMatch]) {
-        self.partials = partials
+    init(segments: [PartialPatternMatch]) {
+        self.segments = segments
     }
     
     /**
@@ -27,7 +27,7 @@ public struct PatternMatchResult {
      - returns: The value if it was captured and is of type `T`, otherwise `nil`
      */
     public func tryValue<T>(named: String) -> T? {
-        return self.partials
+        return self.segments
             .filter { $0.name == named }
             .first?.value as? T
     }
@@ -149,5 +149,5 @@ func performPatternMatch(input: String, pattern: [PartialPatternMatcher], allowR
     }
     
     if (!value.isEmpty && !allowRemainder) { return nil }
-    return PatternMatchResult(partials: partials)
+    return PatternMatchResult(segments: partials)
 }

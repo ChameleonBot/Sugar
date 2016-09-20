@@ -10,4 +10,8 @@ public struct NamedSequencePatternMatcher<S: Sequence>: PartialPatternMatcher wh
             .flatMap { $0.match(against: string, name: name) }
             .first
     }
+    
+    public var matchDescription: String {
+        return "<\(self.name)>"
+    }
 }

@@ -15,4 +15,8 @@ public struct DefaultPatternMatcher<T>: PartialPatternMatcher {
             value: self.input
         )
     }
+    
+    public var matchDescription: String {
+        return String(describing: self.input)
+    }
 }

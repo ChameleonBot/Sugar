@@ -20,13 +20,23 @@ public struct SlackModelTypePatternMatcher<T: SlackModelType & SlackModelIdentif
             value: self.model
         )
     }
+    
+    public var matchDescription: String {
+        if let model = model as? SlackNamedType {
+            return "\(self.token)\(model.name)"
+        }
+        return "<\(type(of: self.model))>"
+    }
 }
 
 extension User: PartialPatternMatcher {
+    private var matcher: SlackModelTypePatternMatcher<User> { return SlackModelTypePatternMatcher(name: nil, token: "@", model: self) }
+    
     public func match(against string: String) -> PartialPatternMatch? {
-        return SlackModelTypePatternMatcher(name: nil, token: "@", model: self)
-            .match(against: string)
+        return self.matcher.match(against: string)
     }
+    
+    public var matchDescription: String { return self.matcher.matchDescription }
 }
 extension User: PartialNamedPatternMatcher {
     public func match(against string: String, name: String) -> PartialPatternMatch? {
@@ -41,10 +51,13 @@ extension User {
 }
 
 extension Channel: PartialPatternMatcher {
+    private var matcher: SlackModelTypePatternMatcher<Channel> { return SlackModelTypePatternMatcher(name: nil, token: "#", model: self) }
+    
     public func match(against string: String) -> PartialPatternMatch? {
-        return SlackModelTypePatternMatcher(name: nil, token: "#", model: self)
-            .match(against: string)
+        return self.matcher.match(against: string)
     }
+    
+    public var matchDescription: String { return self.matcher.matchDescription }
 }
 extension Channel: PartialNamedPatternMatcher {
     public func match(against string: String, name: String) -> PartialPatternMatch? {

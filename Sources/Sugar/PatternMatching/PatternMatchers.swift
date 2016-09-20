@@ -99,15 +99,53 @@ extension String {
     }
 }
 
+extension Sequence where Iterator.Element: PartialPatternMatcher {
+    /// Human readable representation of this pattern
+    public var matchDescription: String {
+        return self
+            .map { $0.matchDescription }
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+    }
+}
+
 func performPatternMatch(input: String, pattern: [PartialPatternMatcher], allowRemainder: Bool = false) -> PatternMatchResult? {
     var value = input
     var partials: [PartialPatternMatch] = []
     
-    for item in pattern {
-        guard let match = item.match(against: value) else { return nil }
-        
-        value = value.remove(prefix: match.matched)
-        partials.append(match)
+    for set in pattern.neighbors {
+        if set.current.isGreedy, let next = set.next {
+            //greedy match, and there are more partial matches required
+            //we need to find out where, if at all, the next one will match
+            let segments = value.components(separatedBy: " ")
+            
+            var nextMatchIndex: String.Index = value.endIndex
+            for segment in segments {
+                if let match = next.match(against: segment), let range = value.range(of: match.matched) {
+                    nextMatchIndex = range.lowerBound
+                    break
+                }
+            }
+            
+            let subValue = value.substring(to: nextMatchIndex)
+            guard let match = set.current.match(against: subValue) else {
+                if set.current.isRequired { return nil }
+                continue
+            }
+            
+            value = value.remove(prefix: match.matched)
+            partials.append(match)
+            
+        } else {
+            //normal match
+            guard let match = set.current.match(against: value) else {
+                if set.current.isRequired { return nil }
+                continue
+            }
+            
+            value = value.remove(prefix: match.matched)
+            partials.append(match)
+        }
     }
     
     if (!value.isEmpty && !allowRemainder) { return nil }

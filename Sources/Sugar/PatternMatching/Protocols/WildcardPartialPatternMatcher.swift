@@ -8,13 +8,13 @@ public protocol WildcardPartialPatternMatcher {
 
 extension String: WildcardPartialPatternMatcher {
     public static var any: PartialPatternMatcher {
-        return ConversionPatternMatcher(name: nil) { return $0 }
+        return ConversionPatternMatcher(greedy: true, required: false, name: nil) { return $0 }
     }
 }
 
 extension Int: WildcardPartialPatternMatcher {
     public static var any: PartialPatternMatcher {
-        return ConversionPatternMatcher<Int>(name: nil) { value in
+        return ConversionPatternMatcher<Int>(greedy: false, required: false, name: nil) { value in
             guard
                 let potential = value.components(separatedBy: " ").first
                 else { return nil }
@@ -26,7 +26,7 @@ extension Int: WildcardPartialPatternMatcher {
 
 extension Double: WildcardPartialPatternMatcher {
     public static var any: PartialPatternMatcher {
-        return ConversionPatternMatcher<Double>(name: nil) { value in
+        return ConversionPatternMatcher<Double>(greedy: false, required: false, name: nil) { value in
             guard
                 let potential = value.components(separatedBy: " ").first
                 else { return nil }
@@ -38,7 +38,7 @@ extension Double: WildcardPartialPatternMatcher {
 
 extension Bool: WildcardPartialPatternMatcher {
     public static var any: PartialPatternMatcher {
-        return ConversionPatternMatcher<Bool>(name: nil) { value in
+        return ConversionPatternMatcher<Bool>(greedy: false, required: false, name: nil) { value in
             guard
                 let potential = value.components(separatedBy: " ").first?.lowercased()
                 else { return nil }

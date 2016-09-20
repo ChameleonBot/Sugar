@@ -33,11 +33,7 @@ public final class SlackMessage {
      - returns: The updated `SlackMessage` instance
      */
     public func text(_ value: String, formatting: SlackMessageFormatting = .None, trailingSpace: Bool = true) -> SlackMessage {
-        let encodedText = value
-            .replacingOccurrences(of: "<", with: "&lt;")
-            .replacingOccurrences(of: ">", with: "&gt;")
-            .replacingOccurrences(of: "&", with: "&amp;")
-        self.messageSegments += [self.value(formatting.formattedText(encodedText), trailingSpace: trailingSpace)]
+        self.messageSegments += [self.value(formatting.formattedText(value), trailingSpace: trailingSpace)]
         return self
     }
     

@@ -8,12 +8,29 @@ public protocol PartialPatternMatcher {
      - returns: A new `PartialPatternMatch` instance if matching was successful, otherwise `nil`
      */
     func match(against string: String) -> PartialPatternMatch?
+    
+    /// Human readable representation of this portion of the pattern
+    var matchDescription: String { get }
+    
+    /// When `true` this instance can match against an undefined amount of the input `String`
+    var isGreedy: Bool { get }
+    
+    /// When `true` if this instance does _not_ match, the whole match fails. This is the default
+    var isRequired: Bool { get }
 }
 
 extension PartialPatternMatcher {
     public func match(against string: String) -> PartialPatternMatch? {
         return DefaultPatternMatcher(input: self, name: nil).match(against: string)
     }
+    
+    public var matchDescription: String {
+        return DefaultPatternMatcher(input: self, name: nil).matchDescription
+    }
+    
+    public var isGreedy: Bool { return false }
+    
+    public var isRequired: Bool { return true }
 }
 
 extension String: PartialPatternMatcher { }
@@ -27,7 +44,7 @@ extension Sequence where Iterator.Element: PartialPatternMatcher {
      
      - returns: A new `PartialPatternMatcher` instance to be used in pattern matching
      */
-    public func any() -> PartialPatternMatcher {
+    public var any: PartialPatternMatcher {
         return SequencePatternMatcher(input: self)
     }
 }

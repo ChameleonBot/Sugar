@@ -9,6 +9,9 @@ public protocol PartialNamedPatternMatcher {
      - returns: A new `PartialPatternMatch` instance if matching was successful, otherwise `nil`
      */
     func match(against string: String, name: String) -> PartialPatternMatch?
+    
+    /// Human readable representation of this portion of the pattern
+    var matchDescription: String { get }
 }
 
 extension PartialNamedPatternMatcher {

@@ -9,4 +9,12 @@ public struct SequencePatternMatcher<S: Sequence>: PartialPatternMatcher where S
             .flatMap { $0.match(against: string) }
             .first
     }
+    
+    public var matchDescription: String {
+        let inputString = self.input
+            .map { $0.matchDescription }
+            .joined(separator: ", ")
+        
+        return "[\(inputString)]"
+    }
 }

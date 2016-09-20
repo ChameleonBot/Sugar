@@ -14,7 +14,7 @@ public struct PartialPatternMatch {
 
 /// The complete set of results obtained from a successful pattern match
 public struct PatternMatchResult {
-    private let partials: [PartialPatternMatch]
+    public let partials: [PartialPatternMatch]
     
     init(partials: [PartialPatternMatch]) {
         self.partials = partials
@@ -105,6 +105,7 @@ func performPatternMatch(input: String, pattern: [PartialPatternMatcher], allowR
     
     for item in pattern {
         guard let match = item.match(against: value) else { return nil }
+        
         value = value.remove(prefix: match.matched)
         partials.append(match)
     }

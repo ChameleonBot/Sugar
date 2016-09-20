@@ -26,6 +26,7 @@ extension Double: WildcardPartialPatternMatcher {
 extension Bool: WildcardPartialPatternMatcher {
     public static var any: PartialPatternMatcher {
         return ConversionPatternMatcher<Bool>(name: nil) { input in
+            let input = input.lowercased()
             let truthy = ["true", "t", "yes", "y", "1"]
             let falsey = ["false", "f", "no", "n", "0"]
             if (truthy.contains(input)) { return true }

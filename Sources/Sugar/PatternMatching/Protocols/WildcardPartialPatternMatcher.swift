@@ -1,3 +1,4 @@
+import Foundation
 
 /// An abstraction that represents a type that can be used to perform a wildcard pattern match test
 public protocol WildcardPartialPatternMatcher {
@@ -13,24 +14,39 @@ extension String: WildcardPartialPatternMatcher {
 
 extension Int: WildcardPartialPatternMatcher {
     public static var any: PartialPatternMatcher {
-        return ConversionPatternMatcher(name: nil) { return Int($0) }
+        return ConversionPatternMatcher<Int>(name: nil) { value in
+            guard
+                let potential = value.components(separatedBy: " ").first
+                else { return nil }
+            
+            return Int(potential)
+        }
     }
 }
 
 extension Double: WildcardPartialPatternMatcher {
     public static var any: PartialPatternMatcher {
-        return ConversionPatternMatcher(name: nil) { return Double($0) }
+        return ConversionPatternMatcher<Double>(name: nil) { value in
+            guard
+                let potential = value.components(separatedBy: " ").first
+                else { return nil }
+            
+            return Double(potential)
+        }
     }
 }
 
 extension Bool: WildcardPartialPatternMatcher {
     public static var any: PartialPatternMatcher {
-        return ConversionPatternMatcher<Bool>(name: nil) { input in
-            let input = input.lowercased()
+        return ConversionPatternMatcher<Bool>(name: nil) { value in
+            guard
+                let potential = value.components(separatedBy: " ").first?.lowercased()
+                else { return nil }
+            
             let truthy = ["true", "t", "yes", "y", "1"]
             let falsey = ["false", "f", "no", "n", "0"]
-            if (truthy.contains(input)) { return true }
-            if (falsey.contains(input)) { return false }
+            if (truthy.contains(potential)) { return true }
+            if (falsey.contains(potential)) { return false }
             return nil
         }
     }

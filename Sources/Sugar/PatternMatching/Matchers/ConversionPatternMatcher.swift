@@ -14,7 +14,7 @@ public struct ConversionPatternMatcher<T>: PartialPatternMatcher {
         
         return PartialPatternMatch(
             name: self.name,
-            matched: string,
+            matched: string.substring(to: String(describing: value).endIndex),
             value: value
         )
     }

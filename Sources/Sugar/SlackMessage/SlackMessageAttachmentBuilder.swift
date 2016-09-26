@@ -22,8 +22,11 @@ public class SlackMessageAttachmentBuilder {
     }
     
     /// Text that appears above the attachment block
-    public func pretext(_ value: String) {
+    public func pretext(_ value: String, markdown: Bool = false) {
         self.attachment.pretext = value
+        if (markdown && !(self.attachment.mrkdwn_in?.contains("pretext") ?? false)) {
+            self.attachment.mrkdwn_in = (self.attachment.mrkdwn_in ?? []) + ["pretext"]
+        }
     }
     
     /// Author information
@@ -40,8 +43,11 @@ public class SlackMessageAttachmentBuilder {
     }
     
     /// Text that appears within the attachment
-    public func text(_ value: String) {
+    public func text(_ value: String, markdown: Bool = false) {
         self.attachment.text = value
+        if (markdown && !(self.attachment.mrkdwn_in?.contains("text") ?? false)) {
+            self.attachment.mrkdwn_in = (self.attachment.mrkdwn_in ?? []) + ["text"]
+        }
     }
     
     /// Add a field to the attachment

@@ -7,11 +7,11 @@ extension SlackMessage: ChatPostMessageRepresentable {
         return ChatPostMessage(
             target: target,
             text: self.messageSegments.joined(separator: ""),
-            response_type: self.response_type,
+            response_type: self.responseType,
             options: self.options,
-            customParameters: nil,
+            customParameters: self.customParameters,
             attachments: (self.attachments.isEmpty ? nil : self.attachments),
-            customUrl: self.response_url.flatMap(URL.init)
+            customUrl: self.responseUrl.flatMap(URL.init)
         )
     }
 }

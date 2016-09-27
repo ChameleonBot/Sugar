@@ -1,18 +1,26 @@
 import Models
 import WebAPI
+import Common
 
 public class SlackMessage {
     //MARK: - Private Properties
     internal var options: [ChatPostMessageOption] = [.linkNames(true)]
     internal var messageSegments: [String] = []
     internal var attachments: [MessageAttachment] = []
-    internal var response_type: MessageResponseType?
-    internal var response_url: String?
+    internal var responseType: MessageResponseType?
+    internal var responseUrl: String?
+    internal var customParameters: [String: String] = [:]
     
     //MARK: - Lifecycle
-    public init(response_type: MessageResponseType? = nil, response_url: String? = nil) {
-        self.response_type = response_type
-        self.response_url = response_url
+    public init(responseType: MessageResponseType? = nil, responseUrl: String? = nil, replaceOriginal: Bool? = nil, deleteOriginal: Bool? = nil) {
+        self.responseType = responseType
+        self.responseUrl = responseUrl
+        if let replaceOriginal = replaceOriginal {
+            self.customParameters = self.customParameters + ["replace_original": (replaceOriginal ? "true" : "false")]
+        }
+        if let deleteOriginal = deleteOriginal {
+            self.customParameters = self.customParameters + ["delete_original": (deleteOriginal ? "true" : "false")]
+        }
     }
     
     /**

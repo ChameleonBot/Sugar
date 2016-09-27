@@ -6,9 +6,14 @@ public class SlackMessage {
     internal var options: [ChatPostMessageOption] = [.linkNames(true)]
     internal var messageSegments: [String] = []
     internal var attachments: [MessageAttachment] = []
+    internal var response_type: MessageResponseType?
+    internal var response_url: String?
     
     //MARK: - Lifecycle
-    public init() { }
+    public init(response_type: MessageResponseType? = nil, response_url: String? = nil) {
+        self.response_type = response_type
+        self.response_url = response_url
+    }
     
     /**
      Set the `ChatPostMessageOption`s to be used for this `SlackMessageSegment`s

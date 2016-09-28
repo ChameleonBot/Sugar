@@ -9,7 +9,8 @@ extension SlackMessage: ChatPostMessageRepresentable {
             text: self.messageSegments.joined(separator: ""),
             response_type: self.responseType,
             options: self.options,
-            customParameters: self.customParameters,
+            replaceOriginal: self.replaceOriginal,
+            deleteOriginal: self.deleteOriginal,
             attachments: (self.attachments.isEmpty ? nil : self.attachments),
             customUrl: self.responseUrl.flatMap(URL.init)
         )

@@ -9,18 +9,16 @@ public class SlackMessage {
     internal var attachments: [MessageAttachment] = []
     internal var responseType: MessageResponseType?
     internal var responseUrl: String?
+    internal var replaceOriginal: Bool?
+    internal var deleteOriginal: Bool?
     internal var customParameters: [String: String] = [:]
     
     //MARK: - Lifecycle
     public init(responseType: MessageResponseType? = nil, responseUrl: String? = nil, replaceOriginal: Bool? = nil, deleteOriginal: Bool? = nil) {
         self.responseType = responseType
         self.responseUrl = responseUrl
-        if let replaceOriginal = replaceOriginal {
-            self.customParameters = self.customParameters + ["replace_original": (replaceOriginal ? "true" : "false")]
-        }
-        if let deleteOriginal = deleteOriginal {
-            self.customParameters = self.customParameters + ["delete_original": (deleteOriginal ? "true" : "false")]
-        }
+        self.replaceOriginal = replaceOriginal
+        self.deleteOriginal = deleteOriginal
     }
     
     /**

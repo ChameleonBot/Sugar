@@ -42,4 +42,23 @@ extension SlackBot {
     public func isAdmin(user: User) -> Bool {
         return self.admins.contains(user)
     }
+    
+    /**
+     Find a `SlackTargetType` with a given name or id
+     
+     - Note: names should be provided without any prefix (i.e. '#')
+     - returns: A `SlackTargetType` if one was found, otherwise nil
+     */
+    public func target(nameOrId: String) -> SlackTargetType? {
+        let models = self.currentSlackModelData()
+        
+        var targets: [SlackTargetType] = []
+        targets.append(contentsOf: models.channels.flatMap({ $0 as SlackTargetType }))
+        targets.append(contentsOf: models.groups.flatMap({ $0 as SlackTargetType }))
+        targets.append(contentsOf: models.ims.flatMap({ $0 as SlackTargetType }))
+        
+        return targets
+            .filter { $0.id == nameOrId || $0.name == nameOrId }
+            .first
+    }
 }

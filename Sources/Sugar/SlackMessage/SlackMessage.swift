@@ -7,18 +7,60 @@ public class SlackMessage {
     internal var options: [ChatPostMessageOption] = [.linkNames(true)]
     internal var messageSegments: [String] = []
     internal var attachments: [MessageAttachment] = []
-    internal var responseType: MessageResponseType?
-    internal var responseUrl: String?
-    internal var replaceOriginal: Bool?
-    internal var deleteOriginal: Bool?
+    internal var responseType: MessageResponseType? = nil
+    internal var responseUrl: String? = nil
+    internal var replaceOriginal: Bool? = nil
+    internal var deleteOriginal: Bool? = nil
     internal var customParameters: [String: String] = [:]
     
     //MARK: - Lifecycle
-    public init(responseType: MessageResponseType? = nil, responseUrl: String? = nil, replaceOriginal: Bool? = nil, deleteOriginal: Bool? = nil) {
-        self.responseType = responseType
-        self.responseUrl = responseUrl
-        self.replaceOriginal = replaceOriginal
-        self.deleteOriginal = deleteOriginal
+    /// Create a new `SlackMessage` instance to build a message to send
+    public init() { }
+    
+    /**
+     Create a `SlackMessage` from an existing `Message` instance
+     */
+    public init(message: Message) {
+        self.messageSegments = message.text?.components(separatedBy: "\n") ?? []
+        self.attachments = message.attachments ?? []
+    }
+    
+    /**
+     Set the `MessageResponseType`s to be used for this message
+     
+     - parameter value: The `MessageResponseType` to use
+     
+     - returns: The updated `SlackMessage` instance
+     */
+    public func respond(_ value: MessageResponseType) -> SlackMessage {
+        self.responseType = value
+        return self
+    }
+
+    /**
+     Define what should happen to the original message if this is an update
+     
+     - parameter replace: Whether or not the original is replaced
+     - parameter delete: Whether or not the original is deleted
+     
+     - returns: The updated `SlackMessage` instance
+     */
+    public func original(replace: Bool? = nil, delete: Bool? = nil) -> SlackMessage {
+        self.replaceOriginal = replace
+        self.deleteOriginal = delete
+        return self
+    }
+    
+    /**
+     Set a custom url the created message will be sent to (used by responders)
+     
+     - parameter value: The url to use
+     
+     - returns: The updated `SlackMessage` instance
+     */
+    public func responseUrl(_ value: String) -> SlackMessage {
+        self.responseUrl = value
+        return self
     }
     
     /**
@@ -65,6 +107,18 @@ public class SlackMessage {
      */
     public func newLine() -> SlackMessage {
         self.messageSegments.append("\n")
+        return self
+    }
+    
+    /**
+     Set any custom parameters to include in the message
+     
+     - parameter value: The custom parameters to use
+     
+     - returns: The updated `SlackMessage` instance
+     */
+    func customParameters(_ value: [String: String]) -> SlackMessage {
+        self.customParameters = value
         return self
     }
 }

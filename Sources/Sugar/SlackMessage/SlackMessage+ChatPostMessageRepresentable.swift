@@ -16,3 +16,18 @@ extension SlackMessage: ChatPostMessageRepresentable {
         )
     }
 }
+
+extension SlackMessage: ChatUpdateRepresentable {
+    public func makeChatUpdate(to original: Message, in target: SlackTargetType) throws -> ChatUpdate {
+        return ChatUpdate(
+            messageTimestamp: original.timestamp,
+            target: target,
+            text: original.text ?? "",
+            options: self.options,
+            replaceOriginal: self.replaceOriginal,
+            deleteOriginal: self.deleteOriginal,
+            attachments: (self.attachments.isEmpty ? nil : self.attachments),
+            customUrl: self.responseUrl.flatMap(URL.init)
+        )
+    }
+}

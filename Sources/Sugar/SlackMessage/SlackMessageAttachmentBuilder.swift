@@ -1,9 +1,8 @@
 import Models
-import Foundation
 
 public class SlackMessageAttachmentBuilder {
-    //MARK: - Private Properties
-    fileprivate var attachment = MessageAttachment(
+    //MARK: - Static 
+    private static let DefaultAttachment = MessageAttachment(
         fallback: "", color: nil, pretext: nil,
         author_name: nil, author_link: nil, author_icon: nil,
         title: nil, title_link: nil,
@@ -15,6 +14,14 @@ public class SlackMessageAttachmentBuilder {
         footer: nil, footer_icon: nil,
         ts: nil
     )
+    
+    //MARK: - Internal Properties
+    var attachment: MessageAttachment
+    
+    //MARK: - Lifecycle
+    init(attachment: MessageAttachment = SlackMessageAttachmentBuilder.DefaultAttachment) {
+        self.attachment = attachment
+    }
     
     /// Attachment colour
     public func color(_ color: SlackColor) {
@@ -50,13 +57,6 @@ public class SlackMessageAttachmentBuilder {
         }
     }
     
-    /// Add a field to the attachment
-    public func field(short: Bool, title: String, value: String) {
-        var fields = self.attachment.fields ?? []
-        fields.append(MessageAttachmentField(title: title, value: value, short: short))
-        self.attachment.fields = fields
-    }
-    
     /// Attachment Image
     public func image(url: String) {
         self.attachment.image_url = url
@@ -80,71 +80,5 @@ public class SlackMessageAttachmentBuilder {
     
     func makeMessageAttachment() -> MessageAttachment {
         return self.attachment
-    }
-}
-
-extension SlackMessageAttachmentBuilder {
-    private func newButton(
-        name: String, text: String, value: String? = nil,
-        style: MessageAttachmentActionStyle? = .default,
-        confirmation: MessageAttachmentActionConfirmation? = nil
-        ) -> (button: MessageAttachmentAction, callbackId: String) {
-        
-        let button = MessageAttachmentAction(
-            name: name,
-            text: text,
-            style: style,
-            type: "button",
-            value: value ?? name,
-            confirm: confirmation
-        )
-        
-        var actions = self.attachment.actions ?? []
-        actions.append(button)
-        self.attachment.actions = actions
-        
-        let callbackId = self.attachment.callback_id ?? NSUUID().uuidString
-        self.attachment.callback_id = callbackId
-        
-        return (button, callbackId)
-    }
-    
-    /// Add a new interactive button to the attachment, will use the default responder
-    public func button(
-        name: String, text: String, value: String? = nil,
-        style: MessageAttachmentActionStyle? = .default,
-        confirmation: MessageAttachmentActionConfirmation? = nil) {
-        
-        _ = self.newButton(
-            name: name,
-            text: text,
-            value: value,
-            style: style,
-            confirmation: confirmation
-        )
-        
-    }
-    
-    /** 
-     Add a new interactive button to the attachment, 
-     will use the provided `SlackInteractiveButtonResponderService` 
-     to handle the button action with the `InteractiveButtonResponseHandler`
-     */
-    public func button(
-        name: String, text: String, value: String? = nil,
-        style: MessageAttachmentActionStyle? = .default,
-        confirmation: MessageAttachmentActionConfirmation? = nil,
-        responder: SlackInteractiveButtonResponderService,
-        handler: @escaping InteractiveButtonResponseHandler) {
-        
-        let button = self.newButton(
-            name: name,
-            text: text,
-            value: value,
-            style: style,
-            confirmation: confirmation
-        )
-        
-        responder.register(callbackId: button.callbackId, button: button.button, with: handler)
     }
 }

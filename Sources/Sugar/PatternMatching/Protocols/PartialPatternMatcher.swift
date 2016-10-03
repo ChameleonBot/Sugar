@@ -39,7 +39,7 @@ extension String: PartialPatternMatcher {
      
      - returns: A new `PartialPatternMatcher` instance to be used in pattern matching
      */
-    var orNone: PartialPatternMatcher {
+    public var orNone: PartialPatternMatcher {
         return [self].anyOrNone
     }
 }

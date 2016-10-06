@@ -7,7 +7,7 @@ public struct NamedSequencePatternMatcher<S: Sequence>: PartialPatternMatcher wh
     public func match(against string: String) -> PartialPatternMatch? {
         return self.input
             .lazy
-            .flatMap { $0.match(against: string, name: name) }
+            .flatMap { $0.match(against: string, name: self.name) }
             .first
     }
     

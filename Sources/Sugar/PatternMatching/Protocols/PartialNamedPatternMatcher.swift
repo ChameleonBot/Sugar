@@ -36,3 +36,18 @@ extension Sequence where Iterator.Element: PartialNamedPatternMatcher {
         return NamedSequencePatternMatcher(input: self, name: name)
     }
 }
+
+extension Sequence where Iterator.Element == PartialPatternMatcher {
+    /**
+     Converts a `Sequence` of _mixed_ and _unnamed_ `PartialPatternMatcher`s into 
+     a single `PartialPatternMatcher` test that can be used in pattern matching
+     
+     The first matched found from left to right will be used
+     
+     - parameter name: The name to use if this tests has a successful match
+     - returns: A new `PartialPatternMatcher` instance to be used in pattern matching
+     */
+    public func any(name: String) -> PartialPatternMatcher {
+        return MixedNamedSequencePatternMatcher(input: self, name: name)
+    }
+}

@@ -1,13 +1,18 @@
 
+public struct ConversionPatternMatch<T> {
+    let value: T
+    let matched: String
+}
+
 /// A matcher that attempts to convert a string into another type using the provided conversion function
 public struct ConversionPatternMatcher<T>: PartialPatternMatcher {
     public let isGreedy: Bool
     public let isRequired: Bool
     
     let name: String?
-    let typeConvertor: (String) -> T?
+    let typeConvertor: (String) -> ConversionPatternMatch<T>?
     
-    init(greedy: Bool, required: Bool, name: String?, typeConvertor: @escaping (String) -> T?) {
+    init(greedy: Bool, required: Bool, name: String?, typeConvertor: @escaping (String) -> ConversionPatternMatch<T>?) {
         self.isGreedy = greedy
         self.isRequired = required
         
@@ -16,12 +21,12 @@ public struct ConversionPatternMatcher<T>: PartialPatternMatcher {
     }
     
     public func match(against string: String) -> PartialPatternMatch? {
-        guard let value = self.typeConvertor(string) else { return nil }
+        guard let match = self.typeConvertor(string) else { return nil }
         
         return PartialPatternMatch(
             name: self.name,
-            matched: string.substring(to: String(describing: value).endIndex),
-            value: value
+            matched: string.substring(to: String(describing: match.matched).endIndex),
+            value: match.value
         )
     }
     

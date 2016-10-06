@@ -1,11 +1,15 @@
 import Bot
 
-open class SlackMessageService: SlackRTMEventService {
-    open var allowedSubTypes: [MessageSubType] { return [.me_message] }
+public protocol SlackMessageService: SlackRTMEventService {
+    var allowedSubTypes: [MessageSubType] { get }
     
-    public init() { }
+    func messageEvent(slackBot: SlackBot, webApi: WebAPI, message: MessageDecorator, previous: MessageDecorator?) throws
+}
+
+extension SlackMessageService {
+    public var allowedSubTypes: [MessageSubType] { return [.me_message] }
     
-    open func configureEvents(slackBot: SlackBot, webApi: WebAPI, dispatcher: SlackRTMEventDispatcher) {
+    public func configureMessageEvent(slackBot: SlackBot, webApi: WebAPI, dispatcher: SlackRTMEventDispatcher) {
         dispatcher.onEvent(message.self) { data in
             if let subtype = data.message.subtype, !self.allowedSubTypes.contains(subtype) {
                 return
@@ -20,7 +24,7 @@ open class SlackMessageService: SlackRTMEventService {
         }
     }
     
-    open func messageEvent(slackBot: SlackBot, webApi: WebAPI, message: MessageDecorator, previous: MessageDecorator?) throws {
-        //Override...
+    public func configureEvents(slackBot: SlackBot, webApi: WebAPI, dispatcher: SlackRTMEventDispatcher) {
+        self.configureMessageEvent(slackBot: slackBot, webApi: webApi, dispatcher: dispatcher)
     }
 }

@@ -13,8 +13,8 @@ public protocol WildcardNamedPartialPatternMatcher {
 extension WildcardNamedPartialPatternMatcher where Self: WildcardPartialPatternMatcher {
     public static func any(name: String) -> PartialPatternMatcher {
         return ConversionPatternMatcher<Self>(greedy: self.any.isGreedy, required: true, name: name) { value in
-            guard let matcher = self.any.match(against: value) else { return nil }
-            return matcher.value as? Self
+            guard let matcher = self.any as? ConversionPatternMatcher<Self> else { return nil }
+            return matcher.typeConvertor(value)
         }
     }
 }

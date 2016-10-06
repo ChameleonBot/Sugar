@@ -96,6 +96,17 @@ public class SlackMessage {
      - returns: The updated `SlackMessage` instance
      */
     public func line(_ segments: SlackMessageSegment...) -> SlackMessage {
+        return self.line(segments)
+    }
+    
+    /**
+     Add a sequence of `SlackMessageSegment`s
+     
+     - parameter segments:   The sequence of `SlackMessageSegment`s to append to the message
+     
+     - returns: The updated `SlackMessage` instance
+     */
+    public func line(_ segments: [SlackMessageSegment]) -> SlackMessage {
         self.messageSegments.append(contentsOf: segments.map({ $0.messageSegment }))
         return self.newLine()
     }

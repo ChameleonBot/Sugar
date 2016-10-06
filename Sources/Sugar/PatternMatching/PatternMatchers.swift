@@ -64,7 +64,7 @@ extension String {
      if let command = source.match(slackBot.me, "give me a number between", Int.any(name: "first"), "and", Int.any(name: "second")) {
         let first: Int = command.value(name: "first")
         let second: Int = command.value(name: "second")
-        
+     
         //use Ints to get random number
      }
      ```
@@ -74,6 +74,39 @@ extension String {
      - returns: A new `PatternMatchResult` instance if all the tests pass, otherwise `nil`
      */
     public func match(_ pattern: PartialPatternMatcher..., allowRemainder: Bool = false) -> PatternMatchResult? {
+        return performPatternMatch(input: self, pattern: pattern, allowRemainder: allowRemainder)
+    }
+    
+    /**
+     Tests the receiver incrementally against a series of `PartialPatternMatcher` tests.
+     
+     Testing is performed from left to right and each test must succeed in order otherwise the whole test fails.
+     
+     Examples
+     You can perform simple pattern matching:
+     ```
+     let source = "hello @botname"
+     if let helloCommand = source.match(["hi", "hello", "hey"], slackBot.me) {
+        // User said hello to the bot
+     }
+     ```
+     
+     or if you need to extract the values from the pattern:
+     ```
+     let source = "@botname give me a number between 0 and 42"
+     if let command = source.match(slackBot.me, "give me a number between", Int.any(name: "first"), "and", Int.any(name: "second")) {
+        let first: Int = command.value(name: "first")
+        let second: Int = command.value(name: "second")
+     
+        //use Ints to get random number
+     }
+     ```
+     
+     - parameter pattern: A sequence of `PartialPatternMatcher`s used to test the receiver
+     - parameter allowRemainder: When `false` there cannot be any leftover/untested data in the receiver otherwise the test will fail
+     - returns: A new `PatternMatchResult` instance if all the tests pass, otherwise `nil`
+     */
+    public func match(pattern: [PartialPatternMatcher], allowRemainder: Bool = false) -> PatternMatchResult? {
         return performPatternMatch(input: self, pattern: pattern, allowRemainder: allowRemainder)
     }
     
@@ -95,6 +128,27 @@ extension String {
      - returns: `true` if all the tests pass, otherwise `false`
      */
     public func matches(_ pattern: PartialPatternMatcher..., allowRemainder: Bool = false) -> Bool {
+        return (performPatternMatch(input: self, pattern: pattern, allowRemainder: allowRemainder) != nil)
+    }
+    
+    /**
+     Returns wether or not the receiver is a match against the provided `PartialPatternMatcher` tests.
+     
+     Testing is performed from left to right and each test must succeed in order otherwise the whole test fails.
+     
+     Example:
+     ```
+     let source = "hello @botname"
+     if source.matches(["hi", "hello", "hey"], slackBot.me) {
+        // User said hello to the bot
+     }
+     ```
+     
+     - parameter pattern: A sequence of `PartialPatternMatcher`s used to test the receiver
+     - parameter allowRemainder: When `false` there cannot be any leftover/untested data in the receiver otherwise the test will fail
+     - returns: `true` if all the tests pass, otherwise `false`
+     */
+    public func matches(pattern: [PartialPatternMatcher], allowRemainder: Bool = false) -> Bool {
         return (performPatternMatch(input: self, pattern: pattern, allowRemainder: allowRemainder) != nil)
     }
 }

@@ -8,7 +8,9 @@ public protocol WildcardPartialPatternMatcher {
 
 extension String: WildcardPartialPatternMatcher {
     public static var any: PartialPatternMatcher {
-        return ConversionPatternMatcher(greedy: true, required: false, name: nil) { return $0 }
+        return ConversionPatternMatcher(greedy: true, required: false, name: nil) {
+            return ConversionPatternMatch(value: $0, matched: $0)
+        }
     }
 }
 
@@ -16,10 +18,11 @@ extension Int: WildcardPartialPatternMatcher {
     public static var any: PartialPatternMatcher {
         return ConversionPatternMatcher<Int>(greedy: false, required: false, name: nil) { value in
             guard
-                let potential = value.components(separatedBy: " ").first
+                let potential = value.components(separatedBy: " ").first,
+                let value = Int(potential)
                 else { return nil }
             
-            return Int(potential)
+            return ConversionPatternMatch(value: value, matched: potential)
         }
     }
 }
@@ -28,10 +31,11 @@ extension Double: WildcardPartialPatternMatcher {
     public static var any: PartialPatternMatcher {
         return ConversionPatternMatcher<Double>(greedy: false, required: false, name: nil) { value in
             guard
-                let potential = value.components(separatedBy: " ").first
+                let potential = value.components(separatedBy: " ").first,
+                let value = Double(potential)
                 else { return nil }
             
-            return Double(potential)
+            return ConversionPatternMatch(value: value, matched: potential)
         }
     }
 }
@@ -43,10 +47,10 @@ extension Bool: WildcardPartialPatternMatcher {
                 let potential = value.components(separatedBy: " ").first?.lowercased()
                 else { return nil }
             
-            let truthy = ["true", "t", "yes", "y", "1"]
-            let falsey = ["false", "f", "no", "n", "0"]
-            if (truthy.contains(potential)) { return true }
-            if (falsey.contains(potential)) { return false }
+            let truthy = ["true", "t", "yes", "y", "yep", "yup", "yeah", "yeh"]
+            let falsey = ["false", "f", "no", "n", "nah", "nup", "nope"]
+            if (truthy.contains(potential)) { return ConversionPatternMatch(value: true, matched: potential) }
+            if (falsey.contains(potential)) { return ConversionPatternMatch(value: false, matched: potential) }
             return nil
         }
     }

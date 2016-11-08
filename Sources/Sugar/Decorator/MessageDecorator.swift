@@ -23,7 +23,7 @@ public struct MessageDecorator {
     
     /// The `SlackTargetType` for this `Message`
     public var target: SlackTargetType? {
-        return self.message.channel?.value
+        return self.message.channel
     }
     
     /// A sequence of mentioned `User`s in the `Message`

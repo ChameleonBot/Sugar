@@ -74,7 +74,7 @@ public class SlackMessageAttachmentBuilder {
     }
     
     /// Timestamp for attachment
-    public func timestamp(_ value: Int) {
+    public func timestamp(_ value: String) {
         self.attachment.ts = value
     }
     

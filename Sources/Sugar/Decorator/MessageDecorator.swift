@@ -109,7 +109,7 @@ public struct MessageDecorator {
 
 //MARK: - Link Extraction
 fileprivate extension MessageDecorator {
-    private typealias RegexMatch = (range: Range<String.Index>, string: String)
+    typealias RegexMatch = (range: Range<String.Index>, string: String)
     
     func mentionedLinks<T>(factory: (RegexMatch) -> T?) -> [MessageLink<T>] {
         let links: [RegexMatch] = (try? self.text.substrings(matching: "<(.*?)>")) ?? []
